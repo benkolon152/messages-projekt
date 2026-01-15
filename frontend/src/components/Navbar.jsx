@@ -16,10 +16,8 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
   const fileInputRef = useRef(null);
   
-  // Hide navbar on login and register pages
   const isAuthPage = location.pathname === "/" || location.pathname === "/register";
 
-  // Apply dark mode on mount and when it changes
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark-mode");
@@ -28,12 +26,10 @@ export default function Navbar() {
     }
   }, [isDarkMode]);
 
-  // Load user profile picture
   useEffect(() => {
     if (isLoggedIn && !isAuthPage) {
       loadProfilePicture();
     } else {
-      // Reset profile picture when logging out
       setProfilePicture(null);
     }
   }, [isLoggedIn, isAuthPage]);
@@ -41,7 +37,6 @@ export default function Navbar() {
   async function loadProfilePicture() {
     try {
       const data = await api("/users/me");
-      // Explicitly set to null if no picture, otherwise set the URL
       setProfilePicture(data?.profilePicture || null);
     } catch (err) {
       console.error("Failed to load profile picture:", err);
@@ -76,7 +71,6 @@ export default function Navbar() {
     }
   }
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {

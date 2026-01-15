@@ -10,7 +10,6 @@ import { Op } from "sequelize";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = path.join(__dirname, "../../uploads");
@@ -27,7 +26,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -57,7 +56,6 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// Get current user profile
 router.get("/me", auth, async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
@@ -70,7 +68,6 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
-// Upload profile picture
 router.post("/profile-picture", auth, upload.single("profilePicture"), async (req, res) => {
   try {
     if (!req.file) {
@@ -79,7 +76,6 @@ router.post("/profile-picture", auth, upload.single("profilePicture"), async (re
 
     const user = await User.findByPk(req.user.id);
     
-    // Delete old profile picture if exists
     if (user.profilePicture) {
       const oldPath = path.join(__dirname, "../../uploads", path.basename(user.profilePicture));
       if (fs.existsSync(oldPath)) {

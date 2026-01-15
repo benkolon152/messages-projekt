@@ -27,26 +27,20 @@ export default function Messages() {
     try {
       const data = await api("/messages");
       
-      // Filter to show messages with selected friend
       let filtered = data;
       const friendToShow = forFriendId !== null ? forFriendId : selectedFriend;
       
       if (friendToShow) {
         filtered = data.filter(m => {
-          // Show messages where I'm either the sender or receiver
-          // AND the other person is the selected friend
           const isFromFriend = m.senderId === friendToShow && m.receiverId === userId;
           const isToFriend = m.senderId === userId && m.receiverId === friendToShow;
           return isFromFriend || isToFriend;
         });
       }
       
-      // Only notify if count increased since last check
       if (data.length > previousCount && previousCount > 0) {
         if (!hasNotified.current) {
-          // Find the newest message (first in DESC order)
           const newestMessage = data[0];
-          // Only show notification if it's from someone else
           if (newestMessage && newestMessage.senderId !== userId) {
             const senderName = newestMessage.sender?.username || "Someone";
             toast.info(`New message from ${senderName}`);
@@ -58,7 +52,6 @@ export default function Messages() {
       }
       setPreviousCount(data.length);
       
-      // Reverse to show chronologically (backend returns DESC)
       setMessages([...filtered].reverse());
     } catch (err) {
       console.error("Error loading messages:", err);
@@ -114,7 +107,6 @@ export default function Messages() {
 
   return (
     <div style={{ display: "flex", height: "88vh", gap: 0, color: "var(--text)" }}>
-      {/* Left sidebar - Friends list */}
       <div style={{ width: "300px", borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column", overflowY: "auto" }}>
         <div style={{ padding: "1rem", borderBottom: "1px solid var(--border)", background: "var(--panel-subtle)" }}>
           <h2 style={{ margin: 0, fontSize: "1.2rem" }}>Messages</h2>
@@ -222,18 +214,15 @@ export default function Messages() {
         )}
       </div>
 
-      {/* Right side - Chat area */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {selectedFriend ? (
           <>
-            {/* Chat header */}
             <div style={{ padding: "1rem", borderBottom: "1px solid var(--border)", background: "var(--panel-subtle)" }}>
               <h3 style={{ margin: 0 }}>
                 {friends.find(f => f.id === selectedFriend)?.username}
               </h3>
             </div>
 
-            {/* Messages area */}
             <div style={{ flex: 1, overflowY: "auto", padding: "1rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {messages.length === 0 ? (
                 <div style={{ textAlign: "center", color: "var(--muted)", marginTop: "2rem" }}>
@@ -267,7 +256,6 @@ export default function Messages() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Message input area */}
             <div style={{ padding: "1rem", borderTop: "1px solid var(--border)", display: "flex", gap: "0.5rem", background: "var(--panel-subtle)" }}>
               <input
                 placeholder="Type a message..."

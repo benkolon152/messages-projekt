@@ -39,13 +39,11 @@ router.post("/", auth, async (req, res) => {
 
     console.log("POST /messages - senderId:", senderId, "receiverId:", receiverId, "content:", content);
 
-    // Can't message yourself
     if (senderId === receiverId) {
       console.log("Error: Cannot message yourself");
       return res.status(400).json({ error: "Cannot message yourself" });
     }
 
-    // Check if users are friends
     const friendship = await Friendship.findOne({
       where: {
         status: "accepted",
