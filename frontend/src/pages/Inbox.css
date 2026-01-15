@@ -1,0 +1,18 @@
+.message {
+  max-width: 75%;
+  padding: 0.7rem;
+  margin: 0.5rem 0;
+  border-radius: 12px;
+}
+
+.left {
+  background: #e5e7eb;
+  align-self: flex-start;
+}
+
+.right {
+  background: #2563eb;
+  color: white;
+  align-self: flex-end;
+  margin-left: auto;
+}

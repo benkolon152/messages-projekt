@@ -40,3 +40,14 @@
 .read-the-docs {
   color: #888;
 }
+
+.container {
+  max-width: 480px;
+  margin: auto;
+  padding: 1rem;
+}
+
+input, button {
+  width: 100%;
+  margin: 0.5rem 0;
+}
