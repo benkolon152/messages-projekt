@@ -12,6 +12,7 @@ export default function Register() {
     try {
       const data = await api("/auth/register", "POST", { username, password });
       localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.userId);
       toast.success("Registration successful");
       navigate("/inbox");
     } catch (err) {

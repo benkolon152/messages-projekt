@@ -12,6 +12,7 @@ export default function Login() {
     try {
       const data = await api("/auth/login", "POST", { username, password });
       localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.userId);
       toast.success("Login successful");
       navigate("/inbox");
     } catch {

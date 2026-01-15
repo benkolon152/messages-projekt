@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
-  const [messages, setMessages] = useState({});
+  const [search, setSearch] = useState("");
   const [friends, setFriends] = useState([]);
   const [requestsSent, setRequestsSent] = useState({});
 
@@ -41,33 +41,33 @@ export default function Users() {
     }
   }
 
-  async function sendMessage(userId) {
-    try {
-      const content = messages[userId];
-      if (!content) {
-        toast.error("Please enter a message");
-        return;
-      }
-
-      await api("/messages", "POST", {
-        receiverId: userId,
-        content: content,
-      });
-      toast.success("Message sent");
-      setMessages({ ...messages, [userId]: "" });
-    } catch (err) {
-      toast.error(err.message || "Failed to send message");
-    }
-  }
+  const filteredUsers = users.filter(u =>
+    u.username.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="container">
       <h2>Users</h2>
 
-      {users.length === 0 ? (
+      <input
+        type="text"
+        placeholder="Search users..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "0.75rem",
+          marginBottom: "1rem",
+          borderRadius: "0.25rem",
+          border: "1px solid #ccc",
+          fontSize: "1rem"
+        }}
+      />
+
+      {filteredUsers.length === 0 ? (
         <p>No users found</p>
       ) : (
-        users.map(u => {
+        filteredUsers.map(u => {
           const isFriend = friends.includes(u.id);
           const requestSent = requestsSent[u.id];
 
@@ -85,34 +85,13 @@ export default function Users() {
                     padding: "0.5rem 1rem",
                     border: "none",
                     borderRadius: "0.25rem",
-                    cursor: requestSent ? "default" : "pointer",
-                    marginBottom: "1rem"
+                    cursor: requestSent ? "default" : "pointer"
                   }}
                 >
                   {requestSent ? "Request Sent" : "Add Friend"}
                 </button>
               ) : (
-                <>
-                  <p style={{ color: "green", margin: "0.5rem 0" }}>✓ Friends</p>
-                  <input
-                    placeholder="Message..."
-                    value={messages[u.id] || ""}
-                    onChange={e => setMessages({ ...messages, [u.id]: e.target.value })}
-                  />
-                  <button
-                    onClick={() => sendMessage(u.id)}
-                    style={{
-                      background: "#10b981",
-                      color: "white",
-                      padding: "0.5rem 1rem",
-                      border: "none",
-                      borderRadius: "0.25rem",
-                      cursor: "pointer"
-                    }}
-                  >
-                    Send
-                  </button>
-                </>
+                <p style={{ color: "green", margin: "0.5rem 0" }}>✓ Friends</p>
               )}
             </div>
           );

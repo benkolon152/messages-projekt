@@ -10,7 +10,12 @@ const router = express.Router();
 router.get("/", auth, async (req, res) => {
   try {
     const messages = await Message.findAll({
-      where: { receiverId: req.user.id },
+      where: {
+        [Op.or]: [
+          { receiverId: req.user.id },
+          { senderId: req.user.id }
+        ]
+      },
       include: [
         {
           model: User,

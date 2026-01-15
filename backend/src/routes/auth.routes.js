@@ -13,7 +13,7 @@ router.post("/login", async (req, res) => {
   if (!ok) return res.sendStatus(401);
 
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-  res.json({ token });
+  res.json({ token, userId: user.id });
 });
 
 router.post("/register", async (req, res) => {
@@ -24,7 +24,7 @@ router.post("/register", async (req, res) => {
       password: hashedPassword
     });
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-    res.json({ token });
+    res.json({ token, userId: user.id });
   } catch (err) {
     console.error("Register error:", err.message);
     if (err.name === "SequelizeUniqueConstraintError") {
