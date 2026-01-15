@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { api } from "../services/api";
+import { api } from "../services/api.js";
 
 export default function Login() {
   const [username, setUsername] = useState("");

@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
-import { api } from "../services/api";
+import { api } from "../services/api.js";
 import "./Navbar.css";
 
 export default function Navbar() {
