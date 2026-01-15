@@ -23,4 +23,4 @@ export async function api(path, method = "GET", body) {
   }
 
   return res.json();
-}rv
+}
