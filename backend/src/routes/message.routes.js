@@ -37,8 +37,11 @@ router.post("/", auth, async (req, res) => {
     const { receiverId, content } = req.body;
     const senderId = req.user.id;
 
+    console.log("POST /messages - senderId:", senderId, "receiverId:", receiverId, "content:", content);
+
     // Can't message yourself
     if (senderId === receiverId) {
+      console.log("Error: Cannot message yourself");
       return res.status(400).json({ error: "Cannot message yourself" });
     }
 
@@ -54,6 +57,7 @@ router.post("/", auth, async (req, res) => {
     });
 
     if (!friendship) {
+      console.log("Error: Not friends. senderId:", senderId, "receiverId:", receiverId);
       return res.status(403).json({ error: "You must be friends to message" });
     }
 
@@ -63,6 +67,7 @@ router.post("/", auth, async (req, res) => {
       receiverId
     });
 
+    console.log("Message created successfully:", message.toJSON());
     res.json(message);
   } catch (err) {
     console.error("Send message error:", err);

@@ -145,38 +145,34 @@ export default function Messages() {
 
             {/* Messages area */}
             <div style={{ flex: 1, overflowY: "auto", padding: "1rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              {console.log("Rendering messages. Count:", messages.length, "userId:", userId, "Messages:", messages)}
               {messages.length === 0 ? (
                 <div style={{ textAlign: "center", color: "#999", marginTop: "2rem" }}>
                   No messages yet. Start the conversation!
                 </div>
               ) : (
-                messages.map(m => {
-                  console.log("Rendering message:", m);
-                  return (
+                messages.map(m => (
+                  <div
+                    key={m.id}
+                    style={{
+                      display: "flex",
+                      justifyContent: m.senderId === userId ? "flex-end" : "flex-start",
+                      marginBottom: "0.5rem"
+                    }}
+                  >
                     <div
-                      key={m.id}
                       style={{
-                        display: "flex",
-                        justifyContent: m.senderId === userId ? "flex-end" : "flex-start",
-                        marginBottom: "0.5rem"
+                        maxWidth: "60%",
+                        padding: "0.75rem 1rem",
+                        borderRadius: "1rem",
+                        background: m.senderId === userId ? "#2563eb" : "#e5e7eb",
+                        color: m.senderId === userId ? "white" : "black",
+                        wordWrap: "break-word"
                       }}
                     >
-                      <div
-                        style={{
-                          maxWidth: "60%",
-                          padding: "0.75rem 1rem",
-                          borderRadius: "1rem",
-                          background: m.senderId === userId ? "#2563eb" : "#e5e7eb",
-                          color: m.senderId === userId ? "white" : "black",
-                          wordWrap: "break-word"
-                        }}
-                      >
-                        {m.content}
-                      </div>
+                      {m.content}
                     </div>
-                  );
-                })
+                  </div>
+                ))
               )}
               <div ref={messagesEndRef} />
             </div>
