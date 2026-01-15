@@ -41,6 +41,14 @@ const upload = multer({
 
 const router = express.Router();
 
+// Helper: convert relative upload paths to absolute HTTPS URLs
+function getAbsoluteProfilePictureUrl(relativePath, req) {
+  if (!relativePath) return null;
+  const protocol = req.get("x-forwarded-proto") || req.protocol;
+  const host = req.get("x-forwarded-host") || req.get("host");
+  return `${protocol}://${host}${relativePath}`;
+}
+
 router.get("/", auth, async (req, res) => {
   try {
     const users = await User.findAll({
@@ -49,7 +57,11 @@ router.get("/", auth, async (req, res) => {
         id: { [Op.ne]: req.user.id }
       }
     });
-    res.json(users);
+    const usersWithAbsoluteUrls = users.map(user => ({
+      ...user.toJSON(),
+      profilePicture: getAbsoluteProfilePictureUrl(user.profilePicture, req)
+    }));
+    res.json(usersWithAbsoluteUrls);
   } catch (err) {
     console.error("Get users error:", err);
     res.status(500).json({ error: "Failed to get users" });
@@ -61,7 +73,9 @@ router.get("/me", auth, async (req, res) => {
     const user = await User.findByPk(req.user.id, {
       attributes: ["id", "username", "profilePicture"]
     });
-    res.json(user);
+    const userData = user.toJSON();
+    userData.profilePicture = getAbsoluteProfilePictureUrl(user.profilePicture, req);
+    res.json(userData);
   } catch (err) {
     console.error("Get profile error:", err);
     res.status(500).json({ error: "Failed to get profile" });
@@ -87,7 +101,8 @@ router.post("/profile-picture", auth, upload.single("profilePicture"), async (re
     user.profilePicture = profilePictureUrl;
     await user.save();
 
-    res.json({ profilePicture: profilePictureUrl });
+    const absoluteUrl = getAbsoluteProfilePictureUrl(profilePictureUrl, req);
+    res.json({ profilePicture: absoluteUrl });
   } catch (err) {
     console.error("Upload profile picture error:", err);
     res.status(500).json({ error: "Failed to upload profile picture" });

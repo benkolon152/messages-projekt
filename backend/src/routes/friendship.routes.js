@@ -6,6 +6,14 @@ import { Op } from "sequelize";
 
 const router = express.Router();
 
+// Helper: convert relative upload paths to absolute HTTPS URLs
+function getAbsoluteProfilePictureUrl(relativePath, req) {
+  if (!relativePath) return null;
+  const protocol = req.get("x-forwarded-proto") || req.protocol;
+  const host = req.get("x-forwarded-host") || req.get("host");
+  return `${protocol}://${host}${relativePath}`;
+}
+
 router.get("/", auth, async (req, res) => {
   try {
     const friendships = await Friendship.findAll({
@@ -20,7 +28,11 @@ router.get("/", auth, async (req, res) => {
     });
 
     const friends = friendships.map(f => {
-      return f.userId === req.user.id ? f.friend : f.user;
+      const friend = f.userId === req.user.id ? f.friend : f.user;
+      return {
+        ...friend.toJSON(),
+        profilePicture: getAbsoluteProfilePictureUrl(friend.profilePicture, req)
+      };
     });
 
     res.json(friends);
@@ -100,7 +112,14 @@ router.get("/requests/pending", auth, async (req, res) => {
         attributes: ["id", "username", "profilePicture"]
       }]
     });
-    res.json(requests);
+    const withAbsoluteUrls = requests.map(r => ({
+      ...r.toJSON(),
+      user: {
+        ...r.user.toJSON(),
+        profilePicture: getAbsoluteProfilePictureUrl(r.user.profilePicture, req)
+      }
+    }));
+    res.json(withAbsoluteUrls);
   } catch (err) {
     console.error("Get pending requests error:", err);
     res.status(500).json({ error: "Failed to get pending requests" });
