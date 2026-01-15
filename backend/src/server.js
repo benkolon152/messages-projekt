@@ -23,14 +23,14 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // allow same-origin or server-to-server requests
     if (!origin) return callback(null, true);
-    const vercelPattern = /^https:\/\/messages-projekt[-a-z0-9]*\.vercel\.app$/;
-    if (allowedOrigins.includes(origin) || vercelPattern.test(origin)) {
+    const vercelAny = /^https:\/\/[a-z0-9-]+\.vercel\.app$/i;
+    if (allowedOrigins.includes(origin) || vercelAny.test(origin)) {
       return callback(null, true);
     }
     return callback(new Error("Not allowed by CORS"));
   },
+  optionsSuccessStatus: 204,
 }));
 
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
