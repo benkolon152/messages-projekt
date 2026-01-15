@@ -10,11 +10,12 @@ export default function Register() {
 
   async function handleRegister() {
     try {
-      await api("/auth/register", "POST", { username, password });
+      const data = await api("/auth/register", "POST", { username, password });
+      localStorage.setItem("token", data.token);
       toast.success("Registration successful");
-      navigate("/");
-    } catch {
-      toast.error("Username already exists");
+      navigate("/inbox");
+    } catch (err) {
+      toast.error("Registration failed. Please try again.");
     }
   }
 

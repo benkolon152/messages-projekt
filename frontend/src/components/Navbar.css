@@ -7,13 +7,44 @@
   color: white;
 }
 
+.navbar:has(.nav-links) {
+  justify-content: space-between;
+}
+
+.navbar:not(:has(.nav-links)) {
+  justify-content: center;
+}
+
 .logo {
   font-size: 1.2rem;
   font-weight: bold;
 }
 
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .nav-links a {
   color: white;
-  margin-left: 1rem;
   text-decoration: none;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+.logout-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.logout-btn:hover {
+  background: #991b1b;
 }

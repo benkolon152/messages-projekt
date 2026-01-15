@@ -1,5 +1,6 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db");
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
+import User from "./User.js";
 
 const Message = sequelize.define("Message", {
   content: DataTypes.TEXT,
@@ -7,4 +8,7 @@ const Message = sequelize.define("Message", {
   receiverId: DataTypes.INTEGER,
 });
 
-module.exports = Message;
+Message.belongsTo(User, { foreignKey: "senderId", as: "sender" });
+Message.belongsTo(User, { foreignKey: "receiverId", as: "receiver" });
+
+export default Message;
