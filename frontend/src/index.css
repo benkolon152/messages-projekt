@@ -61,7 +61,6 @@ input::placeholder {
 }
 
 button {
-  width: 100%;
   padding: 0.7rem;
   margin-top: 1rem;
   border-radius: 8px;
@@ -70,6 +69,9 @@ button {
   color: var(--accent-contrast);
   font-weight: bold;
   cursor: pointer;
+}
+#loginbutton{
+  width: 100%;
 }
 
 button:hover {

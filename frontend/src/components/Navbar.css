@@ -62,10 +62,25 @@
   border-radius: 0.25rem;
   cursor: pointer;
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .settings-btn:hover {
   background: var(--button-hover-bg);
+}
+
+.profile-picture-small {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+.profile-placeholder {
+  font-size: 1.2rem;
 }
 
 .dropdown-menu {
@@ -88,7 +103,7 @@
   border: none;
   background: var(--panel-bg);
   color: var(--text);
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   font-size: 0.9rem;
 }

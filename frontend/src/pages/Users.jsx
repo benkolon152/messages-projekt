@@ -72,15 +72,31 @@ export default function Users() {
           const requestSent = requestsSent[u.id];
 
           return (
-            <div key={u.id} className="card" style={{ marginBottom: "1rem" }}>
-              <p>👤 {u.username}</p>
+            <div key={u.id} className="card" style={{ marginBottom: "1rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                {u.profilePicture ? (
+                  <img 
+                    src={`http://localhost:3000${u.profilePicture}`} 
+                    alt={u.username}
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "50%",
+                      objectFit: "cover"
+                    }}
+                  />
+                ) : (
+                  <span style={{ fontSize: "2rem" }}>👤</span>
+                )}
+                <p style={{ margin: 0 }}>{u.username}</p>
+              </div>
 
               {!isFriend ? (
                 <button
                   onClick={() => addFriend(u.id)}
                   disabled={requestSent}
                   style={{
-                    background: requestSent ? "#999" : "#2563eb",
+                    background: requestSent ? "#999" : "var(--accent)",
                     color: "white",
                     padding: "0.5rem 1rem",
                     border: "none",
@@ -91,7 +107,7 @@ export default function Users() {
                   {requestSent ? "Request Sent" : "Add Friend"}
                 </button>
               ) : (
-                <p style={{ color: "green", margin: "0.5rem 0" }}>✓ Friends</p>
+                <p style={{ color: "var(--accent)", margin: 0 }}>✓ Friends</p>
               )}
             </div>
           );

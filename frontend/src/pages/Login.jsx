@@ -28,7 +28,7 @@ export default function Login() {
         <input onChange={e => setUsername(e.target.value)} onKeyPress={e => e.key === "Enter" && handleLogin()} placeholder="Username" />
         <input type="password" onChange={e => setPassword(e.target.value)} onKeyPress={e => e.key === "Enter" && handleLogin()} placeholder="Password" />
 
-        <button onClick={handleLogin}>Login</button>
+        <button id="loginbutton" onClick={handleLogin}>Login</button>
         <p>
           No account? <Link to="/register">Register</Link>
         </p>

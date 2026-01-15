@@ -195,10 +195,27 @@ export default function Messages() {
                   cursor: "pointer",
                   borderBottom: "1px solid var(--border)",
                   fontSize: "1rem",
-                  outline: idx === highlightIndex && selectedFriend !== f.id ? "2px solid var(--accent)" : "none"
+                  outline: idx === highlightIndex && selectedFriend !== f.id ? "2px solid var(--accent)" : "none",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem"
                 }}
               >
-                {f.username}
+                {f.profilePicture ? (
+                  <img 
+                    src={`http://localhost:3000${f.profilePicture}`} 
+                    alt={f.username}
+                    style={{
+                      width: "36px",
+                      height: "36px",
+                      borderRadius: "50%",
+                      objectFit: "cover"
+                    }}
+                  />
+                ) : (
+                  <span style={{ fontSize: "1.5rem" }}>👤</span>
+                )}
+                <span>{f.username}</span>
               </button>
             ))
           )

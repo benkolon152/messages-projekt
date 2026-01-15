@@ -15,8 +15,8 @@ router.get("/", auth, async (req, res) => {
         [Op.or]: [{ userId: req.user.id }, { friendId: req.user.id }]
       },
       include: [
-        { model: User, as: "user", attributes: ["id", "username"] },
-        { model: User, as: "friend", attributes: ["id", "username"] }
+        { model: User, as: "user", attributes: ["id", "username", "profilePicture"] },
+        { model: User, as: "friend", attributes: ["id", "username", "profilePicture"] }
       ]
     });
 
@@ -101,7 +101,7 @@ router.get("/requests/pending", auth, async (req, res) => {
       include: [{
         model: User,
         as: "user",
-        attributes: ["id", "username"]
+        attributes: ["id", "username", "profilePicture"]
       }]
     });
     res.json(requests);

@@ -50,8 +50,24 @@ export default function Inbox() {
       ) : (
         requests.map(r => (
           <div key={r.id} className="card" style={{ marginBottom: "1rem" }}>
-            <p><strong>{r.user?.username}</strong> sent you a friend request</p>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
+              {r.user?.profilePicture ? (
+                <img 
+                  src={`http://localhost:3000${r.user.profilePicture}`} 
+                  alt={r.user?.username}
+                  style={{
+                    width: "48px",
+                    height: "48px",
+                    borderRadius: "50%",
+                    objectFit: "cover"
+                  }}
+                />
+              ) : (
+                <span style={{ fontSize: "2rem" }}>👤</span>
+              )}
+              <p style={{ margin: 0 }}><strong>{r.user?.username}</strong> sent you a friend request</p>
+            </div>
+            <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center" }}>
               <button
                 onClick={() => acceptRequest(r.id)}
                 style={{
