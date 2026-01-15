@@ -19,10 +19,8 @@ app.use(cors({
   origin: ["http://localhost:5173", "http://localhost:5174"]
 }));
 
-// Serve uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
-// Logging middleware
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`, req.body);
   next();
@@ -33,7 +31,6 @@ app.use("/messages", messageRoutes);
 app.use("/users", userRoutes);
 app.use("/friendships", friendshipRoutes);
 
-// 404 handler
 app.use((req, res) => {
   res.status(404).json({ error: "Not found" });
 });

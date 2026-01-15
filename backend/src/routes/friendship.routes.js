@@ -6,7 +6,6 @@ import { Op } from "sequelize";
 
 const router = express.Router();
 
-// Get friends list
 router.get("/", auth, async (req, res) => {
   try {
     const friendships = await Friendship.findAll({
@@ -31,7 +30,6 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// Send friend request
 router.post("/request/:userId", auth, async (req, res) => {
   try {
     const friendId = req.params.userId;
@@ -67,7 +65,6 @@ router.post("/request/:userId", auth, async (req, res) => {
   }
 });
 
-// Accept friend request
 router.post("/accept/:friendshipId", auth, async (req, res) => {
   try {
     const friendship = await Friendship.findByPk(req.params.friendshipId);
@@ -90,7 +87,6 @@ router.post("/accept/:friendshipId", auth, async (req, res) => {
   }
 });
 
-// Get pending friend requests
 router.get("/requests/pending", auth, async (req, res) => {
   try {
     const requests = await Friendship.findAll({
@@ -111,7 +107,6 @@ router.get("/requests/pending", auth, async (req, res) => {
   }
 });
 
-// Decline friend request
 router.post("/decline/:friendshipId", auth, async (req, res) => {
   try {
     const friendship = await Friendship.findByPk(req.params.friendshipId);
