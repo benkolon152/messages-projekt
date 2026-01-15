@@ -1,0 +1,22 @@
+.message {
+  max-width: 75%;
+  padding: 0.7rem;
+  margin: 0.5rem 0;
+  border-radius: 12px;
+}
+
+.left {
+  background: var(--bubble-other-bg);
+  color: var(--bubble-other-text);
+  align-self: flex-start;
+}
+
+.right {
+  background: var(--bubble-self-bg);
+  color: var(--bubble-self-text);
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+  /* Dark Mode Message Styles */
+  /* Dark mode bubbles use variables set in index.css */
