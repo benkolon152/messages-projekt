@@ -16,7 +16,11 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174"]
+  origin: [
+    "http://localhost:5173", 
+    "http://localhost:5174",
+    "https://your-vercel-app.vercel.app"
+  ]
 }));
 
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
@@ -35,8 +39,10 @@ app.use((req, res) => {
   res.status(404).json({ error: "Not found" });
 });
 
+const PORT = process.env.PORT || 3000;
+
 sequelize.sync({ alter: true }).then(() => {
-  app.listen(3000, "0.0.0.0", () => console.log("Backend running on http://0.0.0.0:3000"));
+  app.listen(PORT, "0.0.0.0", () => console.log(`Backend running on http://0.0.0.0:${PORT}`));
 }).catch(err => {
   console.error("Database sync error:", err);
   process.exit(1);
