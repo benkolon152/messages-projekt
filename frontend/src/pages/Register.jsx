@@ -14,7 +14,7 @@ export default function Register() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.userId);
       toast.success("Registration successful");
-      navigate("/inbox");
+      navigate("/messages");
     } catch (err) {
       toast.error("Registration failed. Please try again.");
     }
@@ -25,8 +25,8 @@ export default function Register() {
       <div className="card">
         <h2>Register</h2>
 
-        <input onChange={e => setUsername(e.target.value)} placeholder="Username" />
-        <input type="password" onChange={e => setPassword(e.target.value)} placeholder="Password" />
+        <input onChange={e => setUsername(e.target.value)} onKeyPress={e => e.key === "Enter" && handleRegister()} placeholder="Username" />
+        <input type="password" onChange={e => setPassword(e.target.value)} onKeyPress={e => e.key === "Enter" && handleRegister()} placeholder="Password" />
 
         <button onClick={handleRegister}>Create account</button>
       </div>

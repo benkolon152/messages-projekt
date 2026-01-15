@@ -3,9 +3,33 @@
   font-family: system-ui, sans-serif;
 }
 
+/* Theme Variables */
+:root {
+  --bg: #f3f4f6;
+  --text: #111827;
+  --muted: #6b7280;
+  --panel-bg: #ffffff;
+  --panel-subtle: #f9fafb;
+  --border: #e5e7eb;
+  --accent: #6366f1; /* indigo */
+  --accent-contrast: #ffffff;
+  --navbar-bg: #312e81; /* indigo-800 */
+  --input-bg: #ffffff;
+  --input-border: #cccccc;
+  --button-bg: var(--accent);
+  --button-hover-bg: #4f46e5;
+  --link: #2563eb;
+  --link-hover: #1d4ed8;
+  --bubble-self-bg: var(--accent);
+  --bubble-self-text: #ffffff;
+  --bubble-other-bg: #e5e7eb;
+  --bubble-other-text: #111827;
+}
+
 body {
   margin: 0;
-  background: #f3f4f6;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .container {
@@ -15,7 +39,8 @@ body {
 }
 
 .card {
-  background: white;
+  background: var(--panel-bg);
+  color: var(--text);
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.05);
@@ -26,7 +51,13 @@ input {
   padding: 0.7rem;
   margin: 0.5rem 0;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  background: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--input-border);
+}
+
+input::placeholder {
+  color: var(--muted);
 }
 
 button {
@@ -35,8 +66,58 @@ button {
   margin-top: 1rem;
   border-radius: 8px;
   border: none;
-  background: #2563eb;
-  color: white;
+  background: var(--button-bg);
+  color: var(--accent-contrast);
   font-weight: bold;
   cursor: pointer;
+}
+
+button:hover {
+  background: var(--button-hover-bg);
+}
+
+/* Dark Mode: Purple Theme */
+body.dark-mode {
+  --bg: #12122b; /* deep purple/navy */
+  --text: #e5e7eb;
+  --muted: #c7c8ff;
+  --panel-bg: #1a1b2e;
+  --panel-subtle: #151528;
+  --border: #2a2b45;
+  --accent: #7c3aed; /* violet-600 */
+  --accent-contrast: #ffffff;
+  --navbar-bg: #4c1d95; /* purple-900 */
+  --input-bg: #1f2136;
+  --input-border: #4b4e72;
+  --button-bg: var(--accent);
+  --button-hover-bg: #6d28d9; /* violet-700 */
+  --link: #a78bfa;
+  --link-hover: #c4b5fd;
+  --bubble-self-bg: #7c3aed;
+  --bubble-self-text: #ffffff;
+  --bubble-other-bg: #2a2b45;
+  --bubble-other-text: #e5e7eb;
+}
+
+a { color: var(--link); }
+a:hover { color: var(--link-hover); }
+
+/* React-Toastify dark mode overrides */
+body.dark-mode .Toastify__toast-container {
+  color: var(--text);
+}
+body.dark-mode .Toastify__toast {
+  background: var(--panel-bg) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+body.dark-mode .Toastify__close-button {
+  color: var(--muted) !important;
+}
+body.dark-mode .Toastify__progress-bar {
+  background: var(--accent) !important;
+}
+body.dark-mode .Toastify__toast-icon svg {
+  fill: var(--accent);
 }

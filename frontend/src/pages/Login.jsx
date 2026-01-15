@@ -14,7 +14,7 @@ export default function Login() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.userId);
       toast.success("Login successful");
-      navigate("/inbox");
+      navigate("/messages");
     } catch {
       toast.error("Invalid credentials");
     }
@@ -25,8 +25,8 @@ export default function Login() {
       <div className="card">
         <h2>Login</h2>
 
-        <input onChange={e => setUsername(e.target.value)} placeholder="Username" />
-        <input type="password" onChange={e => setPassword(e.target.value)} placeholder="Password" />
+        <input onChange={e => setUsername(e.target.value)} onKeyPress={e => e.key === "Enter" && handleLogin()} placeholder="Username" />
+        <input type="password" onChange={e => setPassword(e.target.value)} onKeyPress={e => e.key === "Enter" && handleLogin()} placeholder="Password" />
 
         <button onClick={handleLogin}>Login</button>
         <p>

@@ -7,6 +7,8 @@ export default function Messages() {
   const [messages, setMessages] = useState([]);
   const [friends, setFriends] = useState([]);
   const [selectedFriend, setSelectedFriend] = useState(null);
+  const [friendQuery, setFriendQuery] = useState("");
+  const [highlightIndex, setHighlightIndex] = useState(-1);
   const [messageText, setMessageText] = useState("");
   const [previousCount, setPreviousCount] = useState(0);
   const hasNotified = useRef(false);
@@ -42,7 +44,13 @@ export default function Messages() {
       // Only notify if count increased since last check
       if (data.length > previousCount && previousCount > 0) {
         if (!hasNotified.current) {
-          toast.info("New message received");
+          // Find the newest message (first in DESC order)
+          const newestMessage = data[0];
+          // Only show notification if it's from someone else
+          if (newestMessage && newestMessage.senderId !== userId) {
+            const senderName = newestMessage.sender?.username || "Someone";
+            toast.info(`New message from ${senderName}`);
+          }
           hasNotified.current = true;
         }
       } else {
@@ -80,7 +88,6 @@ export default function Messages() {
         receiverId: friendId,
         content: content
       });
-      toast.success("Message sent");
       // Reload messages immediately with the friend ID to filter correctly
       await loadMessages(friendId);
     } catch (err) {
@@ -100,35 +107,101 @@ export default function Messages() {
     }, 5000);
     return () => clearInterval(i);
   }, [selectedFriend]);
+  const filteredFriends = friends.filter(f => f.username?.toLowerCase().includes(friendQuery.toLowerCase()));
+  useEffect(() => {
+    setHighlightIndex(filteredFriends.length ? 0 : -1);
+  }, [friendQuery, friends]);
 
   return (
-    <div style={{ display: "flex", height: "75vh", gap: 0 }}>
+    <div style={{ display: "flex", height: "88vh", gap: 0, color: "var(--text)" }}>
       {/* Left sidebar - Friends list */}
-      <div style={{ width: "300px", borderRight: "1px solid #e5e7eb", display: "flex", flexDirection: "column", overflowY: "auto" }}>
-        <div style={{ padding: "1rem", borderBottom: "1px solid #e5e7eb" }}>
+      <div style={{ width: "300px", borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column", overflowY: "auto" }}>
+        <div style={{ padding: "1rem", borderBottom: "1px solid var(--border)", background: "var(--panel-subtle)" }}>
           <h2 style={{ margin: 0, fontSize: "1.2rem" }}>Messages</h2>
         </div>
-        {friends.length === 0 ? (
-          <div style={{ padding: "1rem", color: "#666" }}>No friends yet</div>
-        ) : (
-          friends.map(f => (
-            <button
-              key={f.id}
-              onClick={() => setSelectedFriend(f.id)}
-              style={{
-                background: selectedFriend === f.id ? "#2563eb" : "transparent",
-                color: selectedFriend === f.id ? "white" : "black",
-                border: "none",
-                padding: "1rem",
-                textAlign: "left",
-                cursor: "pointer",
-                borderBottom: "1px solid #e5e7eb",
-                fontSize: "1rem"
+        <div style={{ padding: "0.75rem", borderBottom: "1px solid var(--border)" }}>
+          <div style={{ position: "relative" }}>
+            <input
+              type="text"
+              placeholder="Search friends..."
+              value={friendQuery}
+              onChange={e => setFriendQuery(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === "Escape") {
+                  setFriendQuery("");
+                  return;
+                }
+                if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  setHighlightIndex(prev => Math.min((prev < 0 ? 0 : prev + 1), Math.max(filteredFriends.length - 1, 0)));
+                } else if (e.key === "ArrowUp") {
+                  e.preventDefault();
+                  setHighlightIndex(prev => Math.max((prev < 0 ? 0 : prev - 1), 0));
+                } else if (e.key === "Enter") {
+                  if (highlightIndex >= 0 && filteredFriends[highlightIndex]) {
+                    setSelectedFriend(filteredFriends[highlightIndex].id);
+                  }
+                }
               }}
-            >
-              {f.username}
-            </button>
-          ))
+              style={{
+                width: "100%",
+                padding: "0.5rem 2rem 0.5rem 0.75rem",
+                borderRadius: "0.25rem",
+                border: "1px solid var(--input-border)",
+                background: "var(--input-bg)",
+                color: "var(--text)"
+              }}
+            />
+            {friendQuery && (
+              <button
+                aria-label="Clear search"
+                onClick={() => setFriendQuery("")}
+                style={{
+                  position: "absolute",
+                  right: "0.5rem",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "transparent",
+                  border: "none",
+                  color: "var(--muted)",
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  lineHeight: 1
+                }}
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
+        {friends.length === 0 ? (
+          <div style={{ padding: "1rem", color: "var(--muted)" }}>No friends yet</div>
+        ) : (
+          filteredFriends.length === 0 ? (
+            <div style={{ padding: "1rem", color: "var(--muted)" }}>No matching friends</div>
+          ) : (
+            filteredFriends.map((f, idx) => (
+              <button
+                key={f.id}
+                onClick={() => setSelectedFriend(f.id)}
+                style={{
+                  background: selectedFriend === f.id
+                    ? "var(--accent)"
+                    : (idx === highlightIndex ? "var(--panel-subtle)" : "transparent"),
+                  color: selectedFriend === f.id ? "var(--accent-contrast)" : "var(--text)",
+                  border: "none",
+                  padding: "1rem",
+                  textAlign: "left",
+                  cursor: "pointer",
+                  borderBottom: "1px solid var(--border)",
+                  fontSize: "1rem",
+                  outline: idx === highlightIndex && selectedFriend !== f.id ? "2px solid var(--accent)" : "none"
+                }}
+              >
+                {f.username}
+              </button>
+            ))
+          )
         )}
       </div>
 
@@ -137,7 +210,7 @@ export default function Messages() {
         {selectedFriend ? (
           <>
             {/* Chat header */}
-            <div style={{ padding: "1rem", borderBottom: "1px solid #e5e7eb", background: "#f9fafb" }}>
+            <div style={{ padding: "1rem", borderBottom: "1px solid var(--border)", background: "var(--panel-subtle)" }}>
               <h3 style={{ margin: 0 }}>
                 {friends.find(f => f.id === selectedFriend)?.username}
               </h3>
@@ -146,7 +219,7 @@ export default function Messages() {
             {/* Messages area */}
             <div style={{ flex: 1, overflowY: "auto", padding: "1rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {messages.length === 0 ? (
-                <div style={{ textAlign: "center", color: "#999", marginTop: "2rem" }}>
+                <div style={{ textAlign: "center", color: "var(--muted)", marginTop: "2rem" }}>
                   No messages yet. Start the conversation!
                 </div>
               ) : (
@@ -164,8 +237,8 @@ export default function Messages() {
                         maxWidth: "60%",
                         padding: "0.75rem 1rem",
                         borderRadius: "1rem",
-                        background: m.senderId === userId ? "#2563eb" : "#e5e7eb",
-                        color: m.senderId === userId ? "white" : "black",
+                        background: m.senderId === userId ? "var(--bubble-self-bg)" : "var(--bubble-other-bg)",
+                        color: m.senderId === userId ? "var(--bubble-self-text)" : "var(--bubble-other-text)",
                         wordWrap: "break-word"
                       }}
                     >
@@ -178,7 +251,7 @@ export default function Messages() {
             </div>
 
             {/* Message input area */}
-            <div style={{ padding: "1rem", borderTop: "1px solid #e5e7eb", display: "flex", gap: "0.5rem" }}>
+            <div style={{ padding: "1rem", borderTop: "1px solid var(--border)", display: "flex", gap: "0.5rem", background: "var(--panel-subtle)" }}>
               <input
                 placeholder="Type a message..."
                 value={messageText}
@@ -188,7 +261,9 @@ export default function Messages() {
                   flex: 1,
                   padding: "0.5rem 0.75rem",
                   borderRadius: "0.25rem",
-                  border: "1px solid #ccc",
+                  border: "1px solid var(--input-border)",
+                  background: "var(--input-bg)",
+                  color: "var(--text)",
                   fontSize: "0.95rem",
                   resize: "none"
                 }}
@@ -196,8 +271,8 @@ export default function Messages() {
               <button
                 onClick={() => sendMessage(selectedFriend)}
                 style={{
-                  background: "#10b981",
-                  color: "white",
+                  background: "var(--accent)",
+                  color: "var(--accent-contrast)",
                   padding: "0.5rem 1rem",
                   border: "none",
                   borderRadius: "0.25rem",
@@ -213,7 +288,7 @@ export default function Messages() {
             </div>
           </>
         ) : (
-          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#999" }}>
+          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--muted)" }}>
             <p>Select a friend to start messaging</p>
           </div>
         )}

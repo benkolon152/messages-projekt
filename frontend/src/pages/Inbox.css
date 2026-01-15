@@ -6,13 +6,17 @@
 }
 
 .left {
-  background: #e5e7eb;
+  background: var(--bubble-other-bg);
+  color: var(--bubble-other-text);
   align-self: flex-start;
 }
 
 .right {
-  background: #2563eb;
-  color: white;
+  background: var(--bubble-self-bg);
+  color: var(--bubble-self-text);
   align-self: flex-end;
   margin-left: auto;
 }
+
+  /* Dark Mode Message Styles */
+  /* Dark mode bubbles use variables set in index.css */

@@ -12,9 +12,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import './App.css'
 
 export default function App() {
+  const isDark = typeof window !== 'undefined' && localStorage.getItem("darkMode") === "true";
   return (
     <BrowserRouter>
-      <ToastContainer />
+      <ToastContainer theme={isDark ? "dark" : "light"} />
       <Navbar />
       <Routes>
         <Route path="/" element={<Login />} />
