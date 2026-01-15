@@ -52,7 +52,11 @@ export default function Navbar() {
     formData.append("profilePicture", file);
 
     try {
-      const response = await fetch("http://localhost:3000/users/profile-picture", {
+      const rawBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const withProtocol = /^(https?:)/.test(rawBase) ? rawBase : `https://${rawBase}`;
+      const API_URL = withProtocol.replace(/\/+$/, "");
+
+      const response = await fetch(`${API_URL}/users/profile-picture`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("token")}`
