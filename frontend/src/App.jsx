@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Inbox from "./pages/Inbox";
 import Users from "./pages/Users";
+import ProtectedRoute from "./components/ProtectedRoute";
 import './App.css'
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/inbox" element={<Inbox />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
