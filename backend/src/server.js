@@ -45,6 +45,11 @@ app.use("/messages", messageRoutes);
 app.use("/users", userRoutes);
 app.use("/friendships", friendshipRoutes);
 
+// Root endpoint
+app.get("/", (req, res) => {
+  res.json({ message: "Messages backend API running", status: "ok" });
+});
+
 // Health check endpoint for Render/Vercel
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
