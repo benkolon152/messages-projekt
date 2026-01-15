@@ -19,7 +19,7 @@ app.use(cors({
   origin: [
     "http://localhost:5173", 
     "http://localhost:5174",
-    "https://your-vercel-app.vercel.app"
+    "https://messages-projekt-6v1n.vercel.app"
   ]
 }));
 
