@@ -6,6 +6,14 @@ import { Op } from "sequelize";
 
 const router = express.Router();
 
+function normalizeProfileUrl(url, req) {
+  if (!url) return null;
+  if (/^https?:\/\//i.test(url)) return url;
+  const protocol = req.get("x-forwarded-proto") || req.protocol;
+  const host = req.get("x-forwarded-host") || req.get("host");
+  return `${protocol}://${host}${url.startsWith("/") ? url : `/${url}`}`;
+}
+
 router.get("/", auth, async (req, res) => {
   try {
     const friendships = await Friendship.findAll({
@@ -21,7 +29,9 @@ router.get("/", auth, async (req, res) => {
 
     const friends = friendships.map(f => {
       const friend = f.userId === req.user.id ? f.friend : f.user;
-      return friend.toJSON();
+      const data = friend.toJSON();
+      data.profilePicture = normalizeProfileUrl(data.profilePicture, req);
+      return data;
     });
 
     res.json(friends);
@@ -101,7 +111,14 @@ router.get("/requests/pending", auth, async (req, res) => {
         attributes: ["id", "username", "profilePicture"]
       }]
     });
-    res.json(requests);
+    const normalized = requests.map(r => ({
+      ...r.toJSON(),
+      user: {
+        ...r.user.toJSON(),
+        profilePicture: normalizeProfileUrl(r.user.profilePicture, req)
+      }
+    }));
+    res.json(normalized);
   } catch (err) {
     console.error("Get pending requests error:", err);
     res.status(500).json({ error: "Failed to get pending requests" });

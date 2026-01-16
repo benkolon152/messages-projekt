@@ -30,6 +30,15 @@ const upload = multer({
 
 const router = express.Router();
 
+// Normalize profile picture URLs: if already absolute, return as-is; otherwise prefix with current host
+function normalizeProfileUrl(url, req) {
+  if (!url) return null;
+  if (/^https?:\/\//i.test(url)) return url;
+  const protocol = req.get("x-forwarded-proto") || req.protocol;
+  const host = req.get("x-forwarded-host") || req.get("host");
+  return `${protocol}://${host}${url.startsWith("/") ? url : `/${url}`}`;
+}
+
 router.get("/", auth, async (req, res) => {
   try {
     const users = await User.findAll({
@@ -38,7 +47,11 @@ router.get("/", auth, async (req, res) => {
         id: { [Op.ne]: req.user.id }
       }
     });
-    res.json(users);
+    const normalized = users.map(u => ({
+      ...u.toJSON(),
+      profilePicture: normalizeProfileUrl(u.profilePicture, req)
+    }));
+    res.json(normalized);
   } catch (err) {
     console.error("Get users error:", err);
     res.status(500).json({ error: "Failed to get users" });
@@ -50,7 +63,9 @@ router.get("/me", auth, async (req, res) => {
     const user = await User.findByPk(req.user.id, {
       attributes: ["id", "username", "profilePicture"]
     });
-    res.json(user);
+    const data = user.toJSON();
+    data.profilePicture = normalizeProfileUrl(data.profilePicture, req);
+    res.json(data);
   } catch (err) {
     console.error("Get profile error:", err);
     res.status(500).json({ error: "Failed to get profile" });
