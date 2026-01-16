@@ -123,7 +123,7 @@ export default function Navbar() {
               >
                 {profilePicture ? (
                   <img 
-                    src={`http://localhost:3000${profilePicture}`} 
+                    src={profilePicture.startsWith("http") ? profilePicture : `${import.meta.env.VITE_API_URL || "http://localhost:3000"}${profilePicture}`}
                     alt="Profile" 
                     className="profile-picture-small"
                   />
