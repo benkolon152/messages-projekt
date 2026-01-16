@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 const apiBase = (() => {
   const raw = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const withProtocol = /^(https?:)/.test(raw) ? raw : `https://${raw}`;
-  return withProtocol.replace(/\/+$/, "");
+   return withProtocol.replace(/\/+$/, "");
 })();
 
 function getImg(url) {
