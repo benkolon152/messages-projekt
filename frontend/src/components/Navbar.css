@@ -120,3 +120,72 @@
 body.dark-mode .dropdown-menu {
   box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
+
+/* Mobile Responsive Navbar */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.5rem 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .nav-links {
+    gap: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .nav-links a {
+    padding: 0.4rem 0.6rem;
+  }
+
+  .settings-btn {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .profile-picture-small {
+    width: 24px;
+    height: 24px;
+  }
+
+  .dropdown-menu {
+    min-width: 120px;
+  }
+
+  .dropdown-item {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .nav-links {
+    gap: 0.3rem;
+    font-size: 0.75rem;
+  }
+
+  .nav-links a {
+    padding: 0.3rem 0.4rem;
+  }
+
+  .settings-btn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .profile-picture-small {
+    width: 20px;
+    height: 20px;
+  }
+}

@@ -20,3 +20,21 @@
 
   /* Dark Mode Message Styles */
   /* Dark mode bubbles use variables set in index.css */
+
+/* Mobile Responsive Messages */
+@media (max-width: 768px) {
+  .message {
+    max-width: 85%;
+    padding: 0.6rem;
+    margin: 0.4rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .message {
+    max-width: 90%;
+    padding: 0.5rem;
+    margin: 0.3rem 0;
+    font-size: 0.9rem;
+  }
+}
