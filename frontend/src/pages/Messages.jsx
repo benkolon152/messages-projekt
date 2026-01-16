@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { api } from "../services/api.js";
 import { toast } from "react-toastify";
 import "./Inbox.css";
+import "./Messages.css";
 
 export default function Messages() {
   const [messages, setMessages] = useState([]);
@@ -119,8 +120,8 @@ export default function Messages() {
   }, [friendQuery, friends]);
 
   return (
-    <div style={{ display: "flex", height: "88vh", gap: 0, color: "var(--text)" }}>
-      <div style={{ width: "300px", borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column", overflowY: "auto" }}>
+    <div className="messages-container">
+      <div className="messages-sidebar">
         <div style={{ padding: "1rem", borderBottom: "1px solid var(--border)", background: "var(--panel-subtle)" }}>
           <h2 style={{ margin: 0, fontSize: "1.2rem" }}>Messages</h2>
         </div>
@@ -227,7 +228,7 @@ export default function Messages() {
         )}
       </div>
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <div className="messages-panel">
         {selectedFriend ? (
           <>
             <div style={{ padding: "1rem", borderBottom: "1px solid var(--border)", background: "var(--panel-subtle)" }}>
@@ -306,7 +307,7 @@ export default function Messages() {
             </div>
           </>
         ) : (
-          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--muted)" }}>
+          <div className="messages-panel-empty">
             <p>Select a friend to start messaging</p>
           </div>
         )}

@@ -1,0 +1,58 @@
+.messages-container {
+  display: flex;
+  height: 88vh;
+  gap: 0;
+  color: var(--text);
+}
+
+.messages-sidebar {
+  width: 300px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.messages-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-panel-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+
+@media (max-width: 768px) {
+  .messages-container {
+    height: 85vh;
+  }
+
+  .messages-sidebar {
+    width: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .messages-container {
+    height: 85vh;
+    flex-direction: column;
+  }
+
+  .messages-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    max-height: 35%;
+    min-height: 120px;
+  }
+
+  .messages-panel {
+    flex: 1;
+    min-height: 65%;
+  }
+}
