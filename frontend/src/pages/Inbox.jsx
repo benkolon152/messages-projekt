@@ -3,6 +3,19 @@ import { api } from "../services/api.js";
 import { toast } from "react-toastify";
 import "./Inbox.css";
 
+const apiBase = (() => {
+  const raw = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const withProtocol = /^(https?:)/.test(raw) ? raw : `https://${raw}`;
+  return withProtocol.replace(/\/+$/, "");
+})();
+
+function getImg(url) {
+  if (!url) return null;
+  const clean = url.trim();
+  if (/^https?:/i.test(clean)) return clean;
+  return `${apiBase}${clean.startsWith("/") ? "" : "/"}${clean}`;
+}
+
 export default function Inbox() {
   const [requests, setRequests] = useState([]);
 
@@ -52,8 +65,8 @@ export default function Inbox() {
           <div key={r.id} className="card" style={{ marginBottom: "1rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
               {r.user?.profilePicture ? (
-                <img 
-                  src={`http://localhost:3000${r.user.profilePicture}`} 
+                <img
+                  src={getImg(r.user.profilePicture)}
                   alt={r.user?.username}
                   style={{
                     width: "48px",

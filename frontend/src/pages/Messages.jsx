@@ -19,6 +19,19 @@ export default function Messages() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const API_URL = (() => {
+    const rawBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
+    const withProtocol = /^(https?:)/.test(rawBase) ? rawBase : `https://${rawBase}`;
+    return withProtocol.replace(/\/+$/, "");
+  })();
+
+  function getImg(url) {
+    if (!url) return null;
+    const clean = url.trim();
+    if (/^https?:/i.test(clean)) return clean;
+    return `${API_URL}${clean.startsWith("/") ? "" : "/"}${clean}`;
+  }
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -194,8 +207,8 @@ export default function Messages() {
                 }}
               >
                 {f.profilePicture ? (
-                  <img 
-                    src={`http://localhost:3000${f.profilePicture}`} 
+                  <img
+                    src={getImg(f.profilePicture)}
                     alt={f.username}
                     style={{
                       width: "36px",

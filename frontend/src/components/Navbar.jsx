@@ -4,6 +4,19 @@ import { toast } from "react-toastify";
 import { api } from "../services/api.js";
 import "./Navbar.css";
 
+const apiBase = (() => {
+  const raw = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const withProtocol = /^(https?:)/.test(raw) ? raw : `https://${raw}`;
+  return withProtocol.replace(/\/+$, "");
+})();
+
+function getProfileSrc(url) {
+  if (!url) return null;
+  const clean = url.trim();
+  if (/^https?:/i.test(clean)) return clean;
+  return `${apiBase}${clean.startsWith("/") ? "" : "/"}${clean}`;
+}
+
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -122,9 +135,9 @@ export default function Navbar() {
                 className="settings-btn"
               >
                 {profilePicture ? (
-                  <img 
-                    src={profilePicture.startsWith("http") ? profilePicture : `${import.meta.env.VITE_API_URL || "http://localhost:3000"}${profilePicture}`}
-                    alt="Profile" 
+                  <img
+                    src={getProfileSrc(profilePicture)}
+                    alt="Profile"
                     className="profile-picture-small"
                   />
                 ) : (

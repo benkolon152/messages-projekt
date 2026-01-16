@@ -2,6 +2,19 @@ import { useEffect, useState } from "react";
 import { api } from "../services/api.js";
 import { toast } from "react-toastify";
 
+const apiBase = (() => {
+  const raw = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const withProtocol = /^(https?:)/.test(raw) ? raw : `https://${raw}`;
+  return withProtocol.replace(/\/+$/, "");
+})();
+
+function getImg(url) {
+  if (!url) return null;
+  const clean = url.trim();
+  if (/^https?:/i.test(clean)) return clean;
+  return `${apiBase}${clean.startsWith("/") ? "" : "/"}${clean}`;
+}
+
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -75,8 +88,8 @@ export default function Users() {
             <div key={u.id} className="card" style={{ marginBottom: "1rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
                 {u.profilePicture ? (
-                  <img 
-                    src={`http://localhost:3000${u.profilePicture}`} 
+                  <img
+                    src={getImg(u.profilePicture)}
                     alt={u.username}
                     style={{
                       width: "48px",
