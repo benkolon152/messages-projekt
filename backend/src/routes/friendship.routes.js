@@ -125,6 +125,22 @@ router.get("/requests/pending", auth, async (req, res) => {
   }
 });
 
+router.get("/all-pending", auth, async (req, res) => {
+  try {
+    const requests = await Friendship.findAll({
+      where: {
+        userId: req.user.id,
+        status: "pending"
+      },
+      attributes: ["id", "friendId", "status", "createdAt"]
+    });
+    res.json(requests);
+  } catch (err) {
+    console.error("Get all pending requests error:", err);
+    res.status(500).json({ error: "Failed to get pending requests" });
+  }
+});
+
 router.post("/decline/:friendshipId", auth, async (req, res) => {
   try {
     const friendship = await Friendship.findByPk(req.params.friendshipId);

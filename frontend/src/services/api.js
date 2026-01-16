@@ -28,9 +28,15 @@ export async function api(path, method = "GET", body) {
   }
 
   if (!res.ok) {
-    const errorText = await res.text();
-    console.error(`API Error ${res.status}:`, errorText);
-    throw new Error(`API error: ${res.status}`);
+    let errorMessage = `API error: ${res.status}`;
+    try {
+      const errorData = await res.json();
+      errorMessage = errorData.error || errorData.message || errorMessage;
+    } catch {
+      const errorText = await res.text();
+      console.error(`API Error ${res.status}:`, errorText);
+    }
+    throw new Error(errorMessage);
   }
 
   return res.json();

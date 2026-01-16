@@ -20,10 +20,12 @@ export default function Users() {
   const [search, setSearch] = useState("");
   const [friends, setFriends] = useState([]);
   const [requestsSent, setRequestsSent] = useState({});
+  const [pendingRequests, setPendingRequests] = useState([]);
 
   useEffect(() => {
     loadUsers();
     loadFriends();
+    loadPendingRequests();
   }, []);
 
   async function loadUsers() {
@@ -44,13 +46,33 @@ export default function Users() {
     }
   }
 
+  async function loadPendingRequests() {
+    try {
+      const data = await api("/friendships/all-pending");
+      const sentIds = data.map(r => r.friendId);
+      const initialSent = {};
+      sentIds.forEach(id => { initialSent[id] = true; });
+      setRequestsSent(initialSent);
+      setPendingRequests(sentIds);
+    } catch (err) {
+      console.log("No pending requests");
+    }
+  }
+
   async function addFriend(userId) {
     try {
       await api(`/friendships/request/${userId}`, "POST", {});
       setRequestsSent({ ...requestsSent, [userId]: true });
+      setPendingRequests([...pendingRequests, userId]);
       toast.success("Friend request sent");
     } catch (err) {
-      toast.error("Failed to send friend request");
+      const errorMsg = err.message || "Failed to send friend request";
+      if (errorMsg.includes("already exists")) {
+        toast.error("Friend request already sent");
+        setRequestsSent({ ...requestsSent, [userId]: true });
+      } else {
+        toast.error(errorMsg);
+      }
     }
   }
 
